@@ -1,0 +1,28 @@
+SELECT 
+  CRA.produto
+, CRA.tipo
+, CRA.dt_contratacao
+, CRA.dt_venc_mais_antiga
+, CRA.final_cartao
+, CRA.cod_email
+, CRA.cod_sms
+, CRA.cod_push
+, CRA.dt_proximo_venc
+, 'BR' as locale
+, ACC.cpf__c
+, ACC.phone
+, ACC.personemail as email
+, ACC.firstname
+, ACC.id as accountid
+, ACC.personcontactid as contactid
+
+FROM [COBRANCA -  Requisicoes Acionamentos] CRA
+
+    LEFT JOIN   ACCOUNT_SALESFORCE ACC 
+    ON CRA.cpf = ACC.IdExterno__c 
+    
+    LEFT JOIN   [HISTORICO - Cobranca Credito] HIS
+    ON ACC.personcontactid = HIS.contactid
+WHERE CRA.tipo = 'COBRANCA'
+AND   CRA.produto = 'CREDITO'
+AND   HIS.contactid is null
